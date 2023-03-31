@@ -1,0 +1,43 @@
+
+body{
+    background-color: rgba(38, 38, 44,1);
+}
+.wheel{
+    background-image: url("wheel_400.png");
+    width:400px;
+    height: 400px;
+}
+.dcalc{
+    position: absolute;
+    bottom: 30px;
+    text-align: center;
+}
+.point{
+    width: 10px;
+    height: 10px;
+    bottom:0;
+}
+
+#calc{
+    opacity: 1;
+    font-family: Roobert, Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+    display: block;
+    font-size: 26px;
+    color: #404040;
+    font-weight: 500;
+}
+.dcalc i{
+    transform: rotate(135deg);
+    color: #404040;
+    font-size:30px;
+}
+.container {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    justify-self: center;
+    align-items: center;
+    margin-top: 200px;
+}
