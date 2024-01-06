@@ -1,4 +1,9 @@
+
 <?php
+//TODO Make a custom url instead of video.php
+//TODO See async function to get the url, like that it always load
+//TODO Make it extremely optimised and check if there is 
+//TODO remove error : Warning: openssl_encrypt(): Using an empty Initialization Vector (iv) is potentially insecure and not recommended in C:\Users\Shidono\Desktop\projects\creative\encrypt_video_php\index.php on line 23
 /**
  * index.php - The Entry File
 **/
@@ -17,7 +22,7 @@ $token = "https://www.w3schools.com/html/mov_bbb.mp4";
 // We will be encrypting the video name using session id as key ans AES128 as the algorithm
 $token_encrypted = openssl_encrypt($token, "AES-128-CTR", session_id());
 $token = urlencode($token_encrypted);
-//header("Location: video.php?vid=$token");
+// header("Location: video.php?vid=$token");
 //$token = openssl_decrypt($token_encrypted, "AES-128-CTR", session_id());
 ?>
 <link href="https://cdn.jsdelivr.net/npm/video.js@5.20.5/dist/video-js.min.css" rel="stylesheet">
@@ -33,120 +38,24 @@ $token = urlencode($token_encrypted);
         </script>
         <script src="https://cdn.jsdelivr.net/npm/videojs-hotkeys@0.2.25/videojs.hotkeys.min.js"></script>
         <script>
-        //block menu
-            $('.dropdown').click(function () {
-            $(this).attr('tabindex', 1).focus();
-            $(this).toggleClass('active');
-            $(this).find('.dropdown-menu').slideToggle(200);
-        });
-        $('.dropdown').focusout(function () {
-            $(this).removeClass('active');
-            $(this).find('.dropdown-menu').slideUp(200);
-        });
-        $('.dropdown .dropdown-menu li').click(function () {
-            $(this).parents('.dropdown').find('span').text($(this).text());
-            $(this).parents('.dropdown').find('input').attr('value', $(this).attr('id'));
-        });
-        //block menu
-        videojs('video').ready(function() {
-            this.hotkeys({
-            volumeStep: 0.1,
-            seekStep: 5,
-            enableMute: true,
-            enableFullscreen: true,
-            enableNumbers: false,
-            enableVolumeScroll: true,
-            enableHoverScroll: true,
+    // Fetch the video URL dynamically using AJAX
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'video.php', true);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        var videoUrl = xhr.responseText;
+        var video = document.getElementById('video');
+        var source = document.createElement('source');
+        source.src = videoUrl;
+        source.type = 'video/mp4';
+        video.appendChild(source);
+      }
+    };
+    xhr.send();
 
-            seekStep: function(e) {
-                if (e.ctrlKey && e.altKey) {
-                return 5*60;
-                } else if (e.ctrlKey) {
-                return 60;
-                } else if (e.altKey) {
-                return 10;
-                } else {
-                return 5;
-                }
-            },
-
-            fullscreenKey: function(e) {
-                return ((e.which === 70) || (e.ctrlKey && e.which === 13));
-            },
-
-            // Custom Keys
-            customKeys: {
-
-                // Add new simple hotkey
-                simpleKey: {
-                key: function(e) {
-                    return (e.which === 83);
-                },
-                handler: function(player, options, e) {
-                    // Example
-                    if (player.paused()) {
-                    player.play();
-                    } else {
-                    player.pause();
-                    }
-                }
-                },
-                complexKey: {
-                key: function(e) {
-                    // Toggle something with CTRL + D Key
-                    return (e.ctrlKey && e.which === 68);
-                },
-                handler: function(player, options, event) {
-                    // Example
-                    if (options.enableMute) {
-                    player.muted(!player.muted());
-                    }
-                }
-                },
-                numbersKey: {
-                key: function(event) {
-                    return ((event.which > 47 && event.which < 59) || (event.which > 95 && event.which < 106));
-                },
-                handler: function(player, options, event) {
-                    if (options.enableModifiersForNumbers || !(event.metaKey || event.ctrlKey || event.altKey)) {
-                    var sub = 48;
-                    if (event.which > 95) {
-                        sub = 96;
-                    }
-                    var number = event.which - sub;
-                    player.currentTime(player.duration() * number * 0.1);
-                    }
-                }
-                },
-
-                emptyHotkey: {
-                // Empty
-                },
-
-                withoutKey: {
-                handler: function(player, options, event) {
-                    console.log('withoutKey handler');
-                }
-                },
-
-                withoutHandler: {
-                key: function(e) {
-                    return true;
-                }
-                },
-
-                malformedKey: {
-                key: function() {
-                    console.log('I have a malformed customKey. The Key function must return a boolean.');
-                },
-                handler: function(player, options, event) {
-                    //Empty
-                }
-                }
-            }
-            });
-        });
-        </script>
+    // Other video setup and initialization
+    videojs('video').videoJsResolutionSwitcher();
+  </script>
 </div>
 
 </body>
