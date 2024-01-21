@@ -17,7 +17,12 @@ session_regenerate_id();
 $_SESSION['setToken'] = true;
 
 // The filename... You can get that from a $_GET variable and store it here
-$token = "https://www.w3schools.com/html/mov_bbb.mp4";
+
+/* Sample data 
+  https://gist.github.com/jsturgis/3b19447b304616f18657
+  https://gist.github.com/SeunghoonBaek/f35e0fd3db80bf55c2707cae5d0f7184
+*/
+$token = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
 
 // We will be encrypting the video name using session id as key ans AES128 as the algorithm
 $token_encrypted = openssl_encrypt($token, "AES-128-CTR", session_id());
